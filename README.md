@@ -1,3 +1,5 @@
+<p><img src="https://github.com/luka2220/NBA-stats-cli/actions/workflows/go.yml/badge.svg" alt="Github Actions" /></p>
+
 # Nba Statistics Applications
 * A CLI application that displays NBA statistics for league leaders, players, and teams from current or previous seasons
 * My purpose and motivation in building this project is to learn and get a better understanding of:
