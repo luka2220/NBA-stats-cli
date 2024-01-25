@@ -1,10 +1,9 @@
 /*
-Copyright © 2024 NAME HERE <EMAIL ADDRESS>
-
+Copyright © 2024 Luka Piplica piplicaluka64@gmail.com
 */
 package main
 
-import "nba_stats_cli/cmd"
+import "nba/cmd"
 
 func main() {
 	cmd.Execute()
