@@ -6,6 +6,7 @@ package cmd
 import (
 	"io"
 	"nba/models"
+  "nba/utils"
 
 	"encoding/json"
 	"fmt"
@@ -17,11 +18,9 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Constants for API endpoint and headers
+// Standings API endpoint
 const (
-	apiUrl        = "https://api-basketball.p.rapidapi.com/standings?league=12&season=2023-2024"
-	apiKeyHeader  = "X-RapidAPI-Key"
-	apiHostHeader = "X-RapidAPI-Host"
+	standingsUrl  = "https://api-basketball.p.rapidapi.com/standings?league=12&season=2023-2024"
 )
 
 // Handles interactions with the standings API
@@ -33,20 +32,21 @@ type StandingsService struct {
 // Create a new StandingsService with default values
 func NewStandingsService() *StandingsService {
 	return &StandingsService{
-		apiUrl,
+		standingsUrl,
 		nil,
 	}
 }
 
 // Fetch the standings data from NBA api
+// Receiver method associated with the StandingService type
 func (s *StandingsService) FetchStandings() (*models.Standings, error) {
 	req, err := http.NewRequest("GET", s.URL, s.Body)
 	if err != nil {
 		return nil, err
 	}
 
-	req.Header.Add(apiKeyHeader, os.Getenv("API_KEY"))
-	req.Header.Add(apiHostHeader, "api-basketball.p.rapidapi.com")
+	req.Header.Add(utils.ApiKeyHeader, os.Getenv("API_KEY"))
+	req.Header.Add(utils.ApiHostHeader, "api-basketball.p.rapidapi.com")
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {
