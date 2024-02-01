@@ -4,6 +4,7 @@ Copyright © 2024 Luka Piplica piplicaluka64@gmail.com
 package cmd
 
 import (
+	"nba/models"
 	"nba/utils"
 
 	"encoding/json"
@@ -11,15 +12,15 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
 // Shcedule API endpoint
-const (
-	scheduleUrl = "https://api-basketball.p.rapidapi.com/games?league=12&season=2023-2024&timezone=America/Toronto&date=2024-01-27"
-)
+
+var scheduleUrl string = "https://api-basketball.p.rapidapi.com/games?league=12&season=2023-2024&timezone=America/Toronto&date=" + getCurrentDate()
 
 // Struct for handeling interaction with the scheudle API
 type ScheduleService struct {
@@ -53,15 +54,27 @@ func (s *ScheduleService) FetchSchedule() {
 
 	defer resSchedule.Body.Close()
 
-	var scheduleJSON map[string]interface{}
+	var schedule models.Schedule
+	//var scheduleJSON map[string]interface{}
 
-	err = json.NewDecoder(resSchedule.Body).Decode(&scheduleJSON)
+	err = json.NewDecoder(resSchedule.Body).Decode(&schedule)
 	if err != nil {
 		fmt.Println("An error occurred:", err)
 		return
 	}
 
-	fmt.Println(scheduleJSON)
+	fmt.Println(schedule.Response)
+}
+
+func getCurrentDate() string {
+	// Get the current date
+	currentTime := time.Now().UTC()
+
+	const YYYYMMDD = "2006-01-02"   // Must use this string to get the format as YYYYMMDD
+	date := currentTime.Format(YYYYMMDD)
+	fmt.Println(date)
+
+	return date
 }
 
 // scheduleCmd represents the schedule command
