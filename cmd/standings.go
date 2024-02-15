@@ -5,8 +5,8 @@ package cmd
 
 import (
 	"io"
-	"nba/models"
-  "nba/utils"
+	"nba-stats/models"
+	"nba-stats/utils"
 
 	"encoding/json"
 	"fmt"
@@ -20,7 +20,7 @@ import (
 
 // Standings API endpoint
 const (
-	standingsUrl  = "https://api-basketball.p.rapidapi.com/standings?league=12&season=2023-2024"
+	standingsUrl = "https://api-basketball.p.rapidapi.com/standings?league=12&season=2023-2024"
 )
 
 // Handles interactions with the standings API
@@ -81,13 +81,12 @@ func DisplayStandingsTable(standings *models.Standings) {
 		for _, r := range response {
 			// Extract relevant fields from each Response struct
 			position := fmt.Sprintf("%d", r.Position)
-			conference := r.Group.Name
 			team := r.Team.Name
 			wins := fmt.Sprintf("%d", r.Games.Win.Total)
 			losses := fmt.Sprintf("%d", r.Games.Lose.Total)
 			winPercentage := r.Games.Win.Percentage
 
-			if conference == "Western Conference" {
+      if conference := r.Group.Name; conference == "Western Conference" {
 				westConference.Append([]string{position, conference, team, wins, losses, winPercentage})
 			} else if conference == "Eastern Conference" {
 				eastConference.Append([]string{position, conference, team, wins, losses, winPercentage})

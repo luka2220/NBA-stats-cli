@@ -1,24 +1,24 @@
 package models
 
-// Root JSON response type
+// Schedule root JSON response type
 type Schedule struct {
-  Errors    []int `json:"errors"`
-  Response  []ScheduleResponse `json:"response"`
+	Errors   []int              `json:"errors"`
+	Response []ScheduleResponse `json:"response"`
 }
 
-// Schedule JSON response type
+// ScheduleResponse JSON response type
 type ScheduleResponse struct {
-  Time string `json:"time"`
-  Teams HomeAwayTeams `json:"teams"`
+	Time  string        `json:"time"`
+	Teams HomeAwayTeams `json:"teams"`
 }
 
-// Home and away playing JSON response type
+// HomeAwayTeams and away playing JSON response type
 type HomeAwayTeams struct {
-  Home ScheduledTeam `json:"home"`
-  Away ScheduledTeam `json:"Away"`
+	Home ScheduledTeam `json:"home"`
+	Away ScheduledTeam `json:"Away"`
 }
 
-// Team JSON response type
+// ScheduledTeam JSON response type
 type ScheduledTeam struct {
-  Name string `json:"name"`
+	Name string `json:"name"`
 }

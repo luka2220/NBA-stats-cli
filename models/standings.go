@@ -1,12 +1,12 @@
 package models
 
-// Root JSON reposone fields
+// Standings Root JSON reposone fields
 type Standings struct {
 	Errors   []int                 `json:"errors"`
 	Response [][]StandingsResponse `json:"response"`
 }
 
-// Standings JSON repsonse fields
+// StandingsResponse Standings JSON repsonse fields
 type StandingsResponse struct {
 	Position int        `json:"position"`
 	Group    Conference `json:"group"`
@@ -14,7 +14,7 @@ type StandingsResponse struct {
 	Games    Games      `json:"games"`
 }
 
-// Conference JSON repsonse fields
+// Conference JSON response fields
 type Conference struct {
 	Name string `json:"name"`
 }
@@ -31,7 +31,7 @@ type Games struct {
 	Lose   WinLossPercentage `json:"lose"`
 }
 
-// Win Loss and Percentage stats JSON response fields
+// WinLossPercentage Win Loss and Percentage stats JSON response fields
 type WinLossPercentage struct {
 	Total      int    `json:"total"`
 	Percentage string `json:"percentage"`

@@ -4,31 +4,30 @@ Copyright © 2024 Luka Piplica piplicaluka64@gmail.com
 package cmd
 
 import (
-	"nba/models"
-	"nba/utils"
+	"errors"
+	"nba-stats/models"
+	"nba-stats/utils"
 
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
-	"time"
 
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
-// Shcedule API endpoint
+// Schedule API endpoint
+var scheduleUrl string = "https://api-basketball.p.rapidapi.com/games?league=12&season=2023-2024&timezone=America/Toronto&date=" + utils.GetCurrentDate()
 
-var scheduleUrl string = "https://api-basketball.p.rapidapi.com/games?league=12&season=2023-2024&timezone=America/Toronto&date=" + getCurrentDate()
-
-// Struct for handeling interaction with the scheudle API
+// ScheduleService for handling interaction with the schedule API
 type ScheduleService struct {
 	URL  string
 	Body io.Reader
 }
 
-// Initialize a ScheduleService type with deault values
+// NewScheduleService to initialize a ScheduleService type with default values
 func NewScheduleService() *ScheduleService {
 	return &ScheduleService{
 		scheduleUrl,
@@ -36,12 +35,12 @@ func NewScheduleService() *ScheduleService {
 	}
 }
 
-// Receiver method associated with the ScheduleService type for
+// FetchSchedule receiver method associated with the ScheduleService type for
 // fetch the schedule data from the API
-func (s *ScheduleService) FetchSchedule() {
-	reqSchedule, err := http.NewRequest("GET", s.URL, s.Body)
+func (s *ScheduleService) FetchSchedule() (*models.Schedule, error) {
+	reqSchedule, err := http.NewRequest(http.MethodGet, s.URL, s.Body)
 	if err != nil {
-		fmt.Println("An error occured: ", err)
+		return nil, err
 	}
 
 	reqSchedule.Header.Add(utils.ApiKeyHeader, os.Getenv("API_KEY"))
@@ -49,32 +48,21 @@ func (s *ScheduleService) FetchSchedule() {
 
 	resSchedule, err := http.DefaultClient.Do(reqSchedule)
 	if err != nil {
-		fmt.Println("An error occured: ", err)
+		statusCode := resSchedule.StatusCode
+		errorString := fmt.Sprintf("Unexpected response code: %d", statusCode)
+		errors.New(errorString)
 	}
 
 	defer resSchedule.Body.Close()
 
 	var schedule models.Schedule
-	//var scheduleJSON map[string]interface{}
 
 	err = json.NewDecoder(resSchedule.Body).Decode(&schedule)
 	if err != nil {
-		fmt.Println("An error occurred:", err)
-		return
+		return nil, err
 	}
 
-	fmt.Println(schedule.Response)
-}
-
-func getCurrentDate() string {
-	// Get the current date
-	currentTime := time.Now().UTC()
-
-	const YYYYMMDD = "2006-01-02"   // Must use this string to get the format as YYYYMMDD
-	date := currentTime.Format(YYYYMMDD)
-	fmt.Println(date)
-
-	return date
+	return &schedule, nil
 }
 
 // scheduleCmd represents the schedule command
@@ -93,7 +81,7 @@ var scheduleCmd = &cobra.Command{
 		}
 
 		scheduleService := NewScheduleService()
-		scheduleService.FetchSchedule()
+		fmt.Println(scheduleService.FetchSchedule())
 	},
 }
 
